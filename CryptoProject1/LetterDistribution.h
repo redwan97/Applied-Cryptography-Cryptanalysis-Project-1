@@ -46,7 +46,12 @@ public:
 	LetterDistribution(const std::string& msg, const std::string& alphabet = defaultSymbols) 
 		: symbols(alphabet), unqSymCount(msg.length()), frequencyTable(determineDistribution(msg)) {}	// Sibiling constructor, can specify alphabet, symbolCount, and frequency table
 	
-	virtual ~LetterDistribution() { }
+	virtual ~LetterDistribution() {}
+
+	int getSymbolCount() const { return unqSymCount; }													// Getter for SymbolCount 
+	const std::string getSymbols() const { return symbols; }											// Getter for Symbols
+	const int getSymbolsSize() const { return getSymbols().length(); }									// Getter for Symbol size
+	bool equalBySymbols(LetterDistribution& other) { return frequencyTable == other.frequencyTable; }	// Test if frequency tables are exactly the same, == operator
 
 	bool equalByDistribution(LetterDistribution& other) {												// Test if frequency tables are equal, return true if equal
 		std::vector<std::pair<int, char>> left;															// Define List of (char count, char) pairs for this
@@ -63,11 +68,6 @@ public:
 		}
 	}
 
-	bool equalBySymbols(LetterDistribution& other) { return frequencyTable == other.frequencyTable; }	// Test if frequency tables are exactly the same, == operator
-	int getSymbolCount() const { return unqSymCount; }													// Getter for SymbolCount 
-	const std::string getSymbols() const { return symbols; }											// Getter for Symbols
-	const int getSymbolsSize() const { return getSymbols().length(); }									// Getter for Symbol size
-
 	std::vector<std::pair<int, char>> reverseFreqTable() const {										// Creates a freqList with reversd key,val pairs -> (char count, char)
 		std::vector<std::pair<int, char>> freqList;														// Define freqList to be returned
 		std::pair<int, char> symbolFrequency;															// Define instance of freq pair
@@ -76,7 +76,7 @@ public:
 			freqList.push_back(symbolFrequency);														// Add reversed pair to freqList
 		}
 		std::stable_sort(freqList.begin(), freqList.end());												// Stable sort the list, maintain order if freq of two symbols is same
-		return freqList;																				// Return freqList
+		return freqList;																				// Return freqList, vector of pairs
 	}
 };
 
