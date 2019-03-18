@@ -18,7 +18,7 @@
 
 
 																										// Terminology: Symbols = alphabets = characters
-static std::string defaultSymbols = std::string("abcdefghijklmnopqrstuvwxyz ");							// Define default symbol as lowercase english alphabet
+static std::string defaultSymbols = std::string("abcdefghijklmnopqrstuvwxyz");							// Define default symbol as lowercase english alphabet
 
 class LetterDistribution {
 protected:

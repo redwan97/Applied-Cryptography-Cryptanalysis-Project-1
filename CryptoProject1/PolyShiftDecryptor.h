@@ -68,20 +68,22 @@ public:
 	const std::string getExplanation() const {
 		std::string explanation;
 		std::ostringstream os(explanation);
+		std::cout << "For plaintext '" << plainText << "'" << " and ciphertext '" << cipherText << "',\nThe following has been deduced:" << std::endl;
 		if (getKeyShifts().empty()) {																																// if we don't have key shifts, we were not successful
 			std::cout << "The cipher text to plain text at index " << getDictionaryIndex() << " was not a match using key length " << getKeyLength() << std::endl;
 		}
 		else {
-			std::cout << "Decrypted cipher text found to match plain text at index " << dictionaryIndex << ". This appears to be a ";										// test for a single shift repeated by building a set
+			std::cout << "Decrypted cipher text found to match plain text at index " << dictionaryIndex << "." << std::endl << "This appears to be a ";										// test for a single shift repeated by building a set
 			std::set<int> uniqueShifts(getKeyShifts().begin(), getKeyShifts().end());																				// only 1 shift value repeated T times
 			if (uniqueShifts.size() == 1) {
 				char keySymbol = *(uniqueShifts.begin()) + plainSegments[0].getDistribution().getSymbols()[0];
-				std::cout << "simple shift cipher using a shift of " << *uniqueShifts.begin() << " or '" << keySymbol << "'.";
+				std::cout << "simple shift cipher using a shift of " << *uniqueShifts.begin() << " or '" << keySymbol << "'." << std::endl;
 			}
 			else {																																					// multiple shift values. Report these and get the key string.
-				std::cout << "polyalphabetic shift cipher with effective shift sequence of " << /*getKeyShifts()*/ " or '" << getKeyString() << "'.";
+				std::cout << "polyalphabetic shift cipher with effective shift sequence of " << getKeyString() << "'." << std::endl;
 			}
 		}
+		std::cout << std::endl;
 		return std::string(os.str());
 	}
 
@@ -118,10 +120,12 @@ protected:
 		}		
 		std::vector<Text> messages;																																	// Walk through the completed segments, creating a Message for each and appending it to the list
 		for (int segmentIndex = 0; segmentIndex < keyLength; segmentIndex++) {
-			std::string s = "";
-			for (auto x : segments[segmentIndex]) { s += x; }
-			//messages.push_back(Text(std::string(segments[segmentIndex])));
-			messages.push_back(Text(s));
+			if (!segments[segmentIndex].empty()) {
+				std::string s = "";
+				for (auto x : segments[segmentIndex]) { s += x; }
+				//messages.push_back(Text(std::string(segments[segmentIndex])));
+				messages.push_back(Text(s));
+			}
 		}
 		return messages;
 	}
