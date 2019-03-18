@@ -65,10 +65,12 @@ public:
 
 	// Create an explanation for how the plain text was possibly encrypted.
 	// Report list of shifts and possible key phrase.
-	const std::string getExplanation() const {
+	const std::string getExplanation(bool displayPlaintext = false) const {
 		std::string explanation;
 		std::ostringstream os(explanation);
-		std::cout << "\nFor plaintext = '" << plainText << "'" << "\n\nAnd ciphertext = '" << cipherText << "'\n\nThe following has been deduced:" << std::endl;
+		if(displayPlaintext) { std::cout << "\nFor given plaintext," << std::endl; }
+		else { std::cout << "\nFor plaintext = '" << plainText << "'"; }
+		std::cout << "\n\nAnd ciphertext = '" << cipherText << "'\n\nThe following has been deduced:" << std::endl;
 		if (getKeyShifts().empty()) {																																// if we don't have key shifts, we were not successful
 			std::cout << "The cipher text to plain text at index " << getDictionaryIndex() << " was not a match using key length " << getKeyLength() << std::endl;
 		}
@@ -109,23 +111,18 @@ protected:
 
 	static std::vector<Text> deriveSegments(std::string text, int keyLength) {																						// Derive segments from the provided text, returning a list with one segment per key position dictated by the key length. Each segment is represented as a Text.
 		int textLength = text.length();
-		//int segmentMax = ceil((float)textLength / keyLength) + 1;																									// Determine the longest segment to set the segment buffer size
-		//char segments[keyLength][segmentMax];
 		std::vector<std::vector<char>> segments;
 		for (int i = 0; i < keyLength; i++) segments.push_back(std::vector<char>());
 		for (int textIndex = 0; textIndex < textLength; textIndex++) {																								// Make one pass through the input text, appending each symbol to the proper segment
 			int segment = textIndex % keyLength;
 			int segmentIndex = floor(textIndex / keyLength);
-			//segments[segment][segmentIndex] = text[textIndex];
 			segments[segment].push_back(text[textIndex]);
-			//segments[segment][segmentIndex + 1] = '\0';
 		}		
 		std::vector<Text> messages;																																	// Walk through the completed segments, creating a Message for each and appending it to the list
 		for (int segmentIndex = 0; segmentIndex < keyLength; segmentIndex++) {
 			if (!segments[segmentIndex].empty()) {
 				std::string s = "";
 				for (auto x : segments[segmentIndex]) { s += x; }
-				//messages.push_back(Text(std::string(segments[segmentIndex])));
 				messages.push_back(Text(s));
 			}
 		}
@@ -156,7 +153,12 @@ protected:
 		int alphabetSize = plainMessage.getDistribution().getSymbolsSize();
 		for (auto cipherSymbol = cipherMaxSymbolRange.first; cipherSymbol != cipherMaxSymbolRange.second; ++cipherSymbol) {											// Check each plain-cipher combination of equal frequency symbols to identify possible shifts
 			for (auto plainSymbol = plainMaxSymbolRange.first; plainSymbol != plainMaxSymbolRange.second; ++plainSymbol) {
-				int shift = ((cipherSymbol->second - plainSymbol->second) + alphabetSize) % alphabetSize;
+				if (cipherSymbol->second == ' ') { cipherSymbol->second = 123; }																					// HARDEST OF HARD CODED MAGICC
+				if (plainSymbol->second == ' ') { plainSymbol->second = 123; }																						// HARD SCOPE NOOB
+				//std::cout << cipherSymbol->second << " " << plainSymbol->second << " " << std::endl;
+				//std::cout << (int)cipherSymbol->second << " " << (int)plainSymbol->second << " ";
+ 				int shift = ((cipherSymbol->second - plainSymbol->second) + alphabetSize) % alphabetSize;
+				//std::cout << shift << std::endl;
 				std::string shiftedPlain = plainMessage.getShiftedText(shift);																						// Simulate shift of plain text
 				if (cipherMessage.getText() == shiftedPlain) { return shift; }																						// Compare to cipher text
 			}

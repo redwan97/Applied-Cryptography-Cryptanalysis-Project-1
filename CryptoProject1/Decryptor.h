@@ -29,7 +29,7 @@ public:
 
 	virtual ~Decryptor() {}
 	virtual bool decrypt() = 0;																		// Abstract decrypt function, will be implemented by child class
-	virtual const std::string getExplanation() const = 0;											// Abstratct explanation function, will be implemented by child class
+	virtual const std::string getExplanation(bool displayPlaintext = false) const = 0;				// Abstratct explanation function, will be implemented by child class
 
 	const std::string& getPlainText() const { return plainText; }									// Getter for PlainText
 	const std::string& getCipherText() const { return cipherText; }									// Getter for CipherText

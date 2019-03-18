@@ -1,5 +1,6 @@
 ﻿  CryptoProject1.cpp
 c:\users\heart\desktop\nyu documents\nyucshw\appliedcrypto\cryptoproject1\cryptoproject1\polyshiftdecryptor.h(118): warning C4244: 'initializing': conversion from 'double' to 'int', possible loss of data
-c:\users\heart\desktop\nyu documents\nyucshw\appliedcrypto\cryptoproject1\cryptoproject1\cryptoproject1.cpp(32): warning C4018: '<': signed/unsigned mismatch
-c:\users\heart\desktop\nyu documents\nyucshw\appliedcrypto\cryptoproject1\cryptoproject1\cryptoproject1.cpp(67): warning C4018: '<': signed/unsigned mismatch
+c:\users\heart\desktop\nyu documents\nyucshw\appliedcrypto\cryptoproject1\cryptoproject1\cryptoproject1.cpp(39): warning C4018: '<': signed/unsigned mismatch
+c:\users\heart\desktop\nyu documents\nyucshw\appliedcrypto\cryptoproject1\cryptoproject1\cryptoproject1.cpp(103): warning C4018: '<': signed/unsigned mismatch
+c:\users\heart\desktop\nyu documents\nyucshw\appliedcrypto\cryptoproject1\cryptoproject1\cryptoproject1.cpp(117): warning C4018: '<': signed/unsigned mismatch
   CryptoProject1.vcxproj -> C:\Users\heart\Desktop\NYU Documents\NYUcshw\AppliedCrypto\CryptoProject1\Debug\CryptoProject1.exe
