@@ -11,7 +11,6 @@ class SymbolDecryptor {
 			string word;
 			int min = 1000000000;
 			int minWordLength;
-			
 
 
 			fstream fin(file, fstream::in);
@@ -26,16 +25,77 @@ class SymbolDecryptor {
 			}
 
 			for (auto const& p : words){
-		    	cout << p.first << ' ' << p.second << '\n';
-		    	if (p.second < min){
-		    		min = p.second;
-		    		minWordLength = p.first;
-		    	}
+	    		cout << p.first << ' ' << p.second << '\n';
+	    		if (p.second < min){
+	    		min = p.second;
+	    		minWordLength = p.first;
+	    		}
 
 			}
-			
+		
 			cout << "Lowest Frequency: " << minWordLength << " - " << min << endl;
+
 			return words;
+		}
+
+		map<char, int> findMaxChar(string file){
+			map<char, int> chars;
+			char ch;
+			int max = 0;
+			char maxChar;
+
+			vector<int> maxFrequencies;
+			pair<char, int> topChars[5];
+
+			fstream fin(file, fstream::in);
+			while (fin >> ch) {
+				if(chars.count(ch)){
+					chars[ch] = chars[ch] + 1;
+				}
+				else{
+					chars[ch] = 1;
+				}
+
+				if(chars[ch] > max){
+						max = chars[ch];
+						maxChar = ch;
+				}
+			}
+
+			for (auto const& p : chars){
+				maxFrequencies.push_back(p.second);
+			}
+
+			sort(maxFrequencies.begin(), maxFrequencies.end());
+			reverse(maxFrequencies.begin(), maxFrequencies.end());
+
+			for (auto const& p : chars){
+				if(p.second == maxFrequencies[0]){
+					topChars[0].first = p.first;
+					topChars[0].second = p.second;
+				}
+				if(p.second == maxFrequencies[1]){
+					topChars[1].first = p.first;
+					topChars[1].second = p.second;
+				}
+				if(p.second == maxFrequencies[2]){
+					topChars[2].first = p.first;
+					topChars[2].second = p.second;
+				}
+				if(p.second == maxFrequencies[3]){
+					topChars[3].first = p.first;
+					topChars[3].second = p.second;
+				}
+				if(p.second == maxFrequencies[4]){
+					topChars[4].first = p.first;
+					topChars[4].second = p.second;
+				}
+
+
+			}
+
+			//cout << "F: " << maxFrequencies[0] << endl; 
+			cout << "Highest Frequency: " << topChars[0].first << " - " << topChars[0].second << endl;
 		}
 
 		map<string, vector<string> > possibleMatches(string plain, string cipher){
@@ -113,7 +173,84 @@ class SymbolDecryptor {
 
 		}
 
-		void allPermutations(vector<int> shifts, string word){
+
+
+
+
+		void cipherBreak(string file, int keySize){
+			//break my ciphertext into segments
+			vector<string> segments;
+			vector<string> symbols;
+			vector< vector<char> > highFreqSymbols;
+			string segment = "";
+
+
+			char ch;
+			fstream fin(file, fstream::in);
+			while (fin >> noskipws >> ch){
+				segment += ch;
+				if(segment.length() >= keySize){
+					segments.push_back(segment);
+					segment = "";
+				}
+			}
+
 			
+			for(int i = 0; i<segments.size(); ++i){
+				cout << segments[i] << endl;
+			}
+			
+			cout << endl;
+
+			//separate segments by k[i]
+			for(int x = 0; x < keySize; ++x){
+				string symbol = "";
+				for(int y = 0; y < segments.size()-1; ++y){
+					symbol += segments[y][x];
+				}
+				symbols.push_back(symbol);
+			}
+
+			for(int j = 0; j<symbols.size(); ++j){
+				cout << symbols[j] << endl;
+			}
+
+			//find char of highest frequency
+			for(int p = 0; p<symbols.size(); ++p){
+				int max = 0;
+				vector<char> maxChars;
+				map<char, int> chars;
+
+				for(int t = 0; t<symbols[p].length(); ++t){
+					if(chars.count(symbols[p][t])){
+						chars[symbols[p][t]] = chars[symbols[p][t]] + 1;
+					}
+					else{
+					chars[symbols[p][t]] = 1;
+					}
+
+					if(chars[symbols[p][t]] == max){
+						maxChars.push_back(symbols[p][t]);
+					}
+
+					if(chars[symbols[p][t]] > max){
+						max = chars[symbols[p][t]];
+						maxChars.clear();
+						maxChars.push_back(symbols[p][t]);
+					}
+				}
+
+				highFreqSymbols.push_back(maxChars);
+			}
+
+			cout << "Candidates: " << highFreqSymbols.size() << endl;
+			for(int z = 0; z< highFreqSymbols.size(); ++z){
+				for(int c = 0; c<highFreqSymbols[z].size(); ++c){
+					cout << highFreqSymbols[z][c];
+				}
+				cout << ", ";
+			}
+			cout << endl;
+
 		}
 };
