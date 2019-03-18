@@ -68,19 +68,20 @@ public:
 	const std::string getExplanation() const {
 		std::string explanation;
 		std::ostringstream os(explanation);
-		std::cout << "For plaintext '" << plainText << "'" << " and ciphertext '" << cipherText << "',\nThe following has been deduced:" << std::endl;
+		std::cout << "\nFor plaintext = '" << plainText << "'" << "\n\nAnd ciphertext = '" << cipherText << "'\n\nThe following has been deduced:" << std::endl;
 		if (getKeyShifts().empty()) {																																// if we don't have key shifts, we were not successful
 			std::cout << "The cipher text to plain text at index " << getDictionaryIndex() << " was not a match using key length " << getKeyLength() << std::endl;
 		}
 		else {
-			std::cout << "Decrypted cipher text found to match plain text at index " << dictionaryIndex << "." << std::endl << "This appears to be a ";										// test for a single shift repeated by building a set
+			std::cout << "Decrypted cipher text found to match plain text at index " << dictionaryIndex << "." << std::endl << "This appears to be a ";				// test for a single shift repeated by building a set
 			std::set<int> uniqueShifts(getKeyShifts().begin(), getKeyShifts().end());																				// only 1 shift value repeated T times
 			if (uniqueShifts.size() == 1) {
-				char keySymbol = *(uniqueShifts.begin()) + plainSegments[0].getDistribution().getSymbols()[0];
+				char keySymbol = *(uniqueShifts.begin()) + plainSegments[0].getDistribution().getSymbols()[0] - 1;
+				if (keySymbol == '`') { keySymbol = ' '; }																											// more hardcoded magic
 				std::cout << "simple shift cipher using a shift of " << *uniqueShifts.begin() << " or '" << keySymbol << "'." << std::endl;
 			}
 			else {																																					// multiple shift values. Report these and get the key string.
-				std::cout << "polyalphabetic shift cipher with effective shift sequence of " << getKeyString() << "'." << std::endl;
+				std::cout << "polyalphabetic shift cipher with effective shift sequence of '" << getKeyString() << "'." << std::endl;
 			}
 		}
 		std::cout << std::endl;
@@ -92,7 +93,8 @@ public:
 	const std::string getKeyString() const {																														// Build a string from keyShifts 
 		std::string keyString;
 		for (auto it = keyShifts.begin(); it != keyShifts.end(); ++it) {
-			char keySymbol = *it + plainSegments[0].getDistribution().getSymbols()[0];
+			char keySymbol = *it + plainSegments[0].getDistribution().getSymbols()[0] - 1;
+			if (keySymbol == '`') { keySymbol = ' '; }																												// Same hardcoded magic as earlier
 			keyString += keySymbol;
 		}
 		return keyString;
@@ -150,7 +152,7 @@ protected:
 
 		auto cipherMaxSymbolRange = std::equal_range(cipherFreqs.begin(), cipherFreqs.end(),cipherMostFrequentSymbol, FrequencyOrderComparator());					// Find all symbols with same count in cipher and plain text segments
 		auto plainMaxSymbolRange = std::equal_range(plainFreqs.begin(), plainFreqs.end(),cipherMostFrequentSymbol, FrequencyOrderComparator());
-
+		
 		int alphabetSize = plainMessage.getDistribution().getSymbolsSize();
 		for (auto cipherSymbol = cipherMaxSymbolRange.first; cipherSymbol != cipherMaxSymbolRange.second; ++cipherSymbol) {											// Check each plain-cipher combination of equal frequency symbols to identify possible shifts
 			for (auto plainSymbol = plainMaxSymbolRange.first; plainSymbol != plainMaxSymbolRange.second; ++plainSymbol) {

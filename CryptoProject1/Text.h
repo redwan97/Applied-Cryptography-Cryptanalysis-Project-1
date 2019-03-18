@@ -36,7 +36,11 @@ public:
 		char shiftedSymbol;																									// Holder for each shifted char
 
 		for (auto it = text.begin(); it != text.end(); ++it) {																// For each char in plaintext
-			shiftedSymbol = getDistribution().getSymbols()[((*it - symbolsBase) + (symbolsSize + shift)) % symbolsSize];	// Determine shifted char
+			//std::cout << *it << " " << (*it - symbolsBase) << " " << (symbolsSize + shift) << " " << symbolsSize << std::endl;
+			int x;
+			if (*it != ' ') { x = *it - symbolsBase; }																		// Some hardcoded magic to handle spaces;
+			else { x = 26; }
+			shiftedSymbol = getDistribution().getSymbols()[((x) + (symbolsSize + shift)) % symbolsSize];					// Determine shifted char
 			shiftedText += shiftedSymbol;																					// Add shifted char to shifted text
 		}
 		return shiftedText;																									// Return ShiftedText
