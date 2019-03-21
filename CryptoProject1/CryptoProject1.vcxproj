@@ -149,6 +149,7 @@
   <ItemGroup>
     <ClInclude Include="Decryptor.h" />
     <ClInclude Include="Dictionary.h" />
+    <ClInclude Include="Encrypt.h" />
     <ClInclude Include="LetterDistribution.h" />
     <ClInclude Include="PolyShiftDecryptor.h" />
     <ClInclude Include="stdafx.h" />
