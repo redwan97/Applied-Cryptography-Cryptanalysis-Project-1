@@ -83,13 +83,16 @@ int main()
 		*/
 	}
 	else if (option == "Test 2" || option == "2" || option == "test 2" || option == "test2" || option == "Test2" || option == "two" || option == "t2") {
+		std::int keySize;
 		std::cout << "Print whatever notes to prof you want and other details.. " << std::endl;
 		std::cout << "Conducting Test 2..." << std::endl;
-		std::cout << "Please enter the ciphertext to be decrypted : ";
+		std::cout << "Please enter the txt file containing the ciphertext to be decrypted : ";
 		std::cin >> ctext;
+		std::cout << "Please enter key length : ";
+		std::cin >> keySize;
 		//std::getline(std::cin, ctext);
 		SymbolDecryptor* symbolDec = new SymbolDecryptor();
-		symbolDec->cipherDecrypt(ctext, 5, "plaintext_dictionary_2.txt");
+		symbolDec->decrypt(ctext, keySize, "plaintext_dictionary_2.txt");
 		//do somehthing ..
 
 	}
