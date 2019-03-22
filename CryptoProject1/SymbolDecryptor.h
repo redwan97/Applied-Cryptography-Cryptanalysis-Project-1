@@ -9,6 +9,8 @@ class SymbolDecryptor {
 		map<char, int> shifts;
 		map<int, char> shiftsToChars;
 		vector< vector<int> >comb;
+		vector<int> defaultKey;
+		map<string, int> plaintextDictionary;
 
 	public:
 
@@ -35,6 +37,15 @@ void combinations(vector<vector<int> > array, int i, vector<int> accum){
    
 }
 
+void mapDictionary(){
+	string word; 
+
+	fstream fin("plaintext_dictionary_2.txt", fstream::in);
+	while (fin >> word) {
+		plaintextDictionary[word] = 1;
+	}
+}
+
 bool validateDecrytedText(string ptext, string file){
 	string firstWord = "";
 	for(int i = 0; i < ptext.size(); ++i){
@@ -44,8 +55,11 @@ bool validateDecrytedText(string ptext, string file){
 		firstWord+=ptext[i];
 	}
 
+
+	return (plaintextDictionary.count(firstWord));
 	//cout << firstWord << endl;
 
+	/*
 	string word; 
 	bool valid = false;
 	fstream fin(file, fstream::in);
@@ -57,6 +71,7 @@ bool validateDecrytedText(string ptext, string file){
 	}
 
 	return valid; 
+	*/
 }
 
 
@@ -427,13 +442,14 @@ vector <vector<int> > keyBreak(string file, int keySize){
 		key.push_back(keyBit);
 	}
 
-	/*
+	
 	cout << "Key: ";
 	for(int y = 0;y<key.size(); ++y){
 		cout << key[y] << " ";
 	}
 	cout << endl;
-	*/
+	defaultKey = key;
+	
 
 	for(int ee = 0; ee < keyCandidates.size(); ++ee){
 		for(int pp = 0; pp < keyCandidates[ee].size(); ++pp){
@@ -482,8 +498,47 @@ vector <vector<int> > keyBreak(string file, int keySize){
 
 }
 
+
+
+
+string decryptTest(string file, vector<int> key, int keySize){
+	string text = "";
+	int keyIterator = 0;
+	char ch;
+	fstream fin(file, fstream::in);
+	while (fin >> noskipws >> ch) {
+		//cout << ch;
+		char messageBit;
+		if(shifts[ch]-key[keyIterator] > 0){
+			//cout << shiftsToChars[(shifts[ch]-key[keyIterator])] << endl;
+			messageBit = shiftsToChars[(shifts[ch]-key[keyIterator])];
+		}
+		else{
+			//cout << shiftsToChars[((shifts[ch]-key[keyIterator])+27)%28];
+			messageBit = shiftsToChars[((shifts[ch]-key[keyIterator])+27)%28];
+		}
+		
+		cout << messageBit;
+		text += messageBit;
+		if(keyIterator >= keySize-1){
+			keyIterator = 0;
+		}
+		else{
+			keyIterator += 1;
+		}
+	}
+	
+	return(text);
+}
+
+
+
+
+
 string decrypt(string file, int keySize, string dictionary){
 	initializeShifts();
+	mapDictionary();
+	
 	vector< vector<int> > possibleKeys = keyBreak(file, keySize);
 	vector<int> key = {26, 2, 10};
 
@@ -554,7 +609,8 @@ string decrypt(string file, int keySize, string dictionary){
 	}
 
 	if(!keyFound){
-		cout << "KEY NOT FOUND" << endl;
+		cout << "KEY NOT FOUND" << endl << endl;
+		decryptTest(file, defaultKey, keySize);
 	}
 	/*
 	char ch;
@@ -591,5 +647,6 @@ vector<string> decryptAllTs(string file, string dictionary){
 
 	return(allPlainTexts);
 }
+
 
 };
