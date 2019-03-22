@@ -8,9 +8,57 @@ class SymbolDecryptor {
 	private:
 		map<char, int> shifts;
 		map<int, char> shiftsToChars;
+		vector< vector<int> >comb;
 
 	public:
-		
+
+//extern std::vector< vector<int> > pe;
+
+
+void combinations(vector<vector<int> > array, int i, vector<int> accum){
+	
+    if (i == array.size()) // done, no more rows
+    {
+        comb.push_back(accum); // assuming comb is global
+    }
+    else
+    {
+        vector<int> row = array[i];
+        for(int j = 0; j < row.size(); ++j)
+        {
+            vector<int> tmp(accum);
+            tmp.push_back(row[j]);
+            combinations(array,i+1,tmp);
+        }
+    }
+
+   
+}
+
+bool validateDecrytedText(string ptext, string file){
+	string firstWord = "";
+	for(int i = 0; i < ptext.size(); ++i){
+		if(ptext[i] == ' '){
+			break;
+		}
+		firstWord+=ptext[i];
+	}
+
+	//cout << firstWord << endl;
+
+	string word; 
+	bool valid = false;
+	fstream fin(file, fstream::in);
+	while (fin >> word) {
+		if(word == firstWord){
+			valid = true; 
+			break;
+		}
+	}
+
+	return valid; 
+}
+
 
 void initializeShifts(){
 	//basically a multimap
@@ -161,7 +209,7 @@ pair<char, int> findMaxChar(string file){
 
 	}
 
-	cout << "Highest Frequency: " << topChars[0].first << " - " << topChars[0].second << endl;
+	//cout << "Highest Frequency: " << topChars[0].first << " - " << topChars[0].second << endl;
 	return(topChars[0]);
 }
 
@@ -223,41 +271,64 @@ map<int, int> shiftFrequency(map<string, vector<string> > matches){
 
 	return shiftFrequency;
 }
+/*
 
-void findBestGuess(string file, map<int, int> shiftFrequency){
-	vector<int> shifts;
-
-	for (auto const& p : shiftFrequency){
-		shifts.push_back(p.first);
-	} 
-
-	//Go word by word giving best decrypted guess
-	string word;
+void findKeyLength(string file){
+	string first24 = "";
+	int it = 0;
+	char ch;
 	fstream fin(file, fstream::in);
-	while (fin >> word) {
+	while (fin >> noskipws >> ch && it < 24){
+		first24 += ch;
+		it += 1;
+	}
+	
+	cout << first24 << endl;
+	vector< queue<char> > queues;
+	for(int i = 0; i <= 24; ++i){
+		queue<char> newQueue; 
+		for(int j = 0; j < first24.length(); ++j){
+			newQueue.push(first24[j]);
+		}
+		for(int k=0; k < i; ++k){
+			newQueue.push('&');
+			newQueue.pop();
+		}
+		queues.push_back(newQueue);
+	}
 
+	for(int z=0; z<queues.size(); ++z){
+		queue<char> copy = queues[z];
+
+		while (!copy.empty()){
+    		cout << copy.front() << " ";
+    		copy.pop();
+  		}
+  		cout << endl;
 	}
 
 }
+*/
 
 
-vector< vector<int> > allKeys(vector<int> Candidates, vector<int> highFreqs){
-	vector< vector<int> > allKeys;
 
 
-}
 
-
-vector<int> keyBreak(string file, int keySize){
+vector <vector<int> > keyBreak(string file, int keySize){
 	//break my ciphertext into segments
 	vector<string> segments;
 	vector<string> symbols;
 	vector< vector<char> > highFreqSymbols;
 	string segment = "";
 
+	vector< vector <int> > keyCandidates; 
+	vector<int> candidateShifts = {19, 5, 9, 15, 18, 0};
+	vector<int> testKey = {26, 2, 10};
 
 	char ch;
 	fstream fin(file, fstream::in);
+
+
 	while (fin >> noskipws >> ch){
 		segment += ch;
 		if(segment.length() >= keySize){
@@ -265,25 +336,31 @@ vector<int> keyBreak(string file, int keySize){
 			segment = "";
 		}
 	}
+	if(segment.length() > 0){
+		segments.push_back(segment);
+		segment = "";
+	}
 
 	
 	for(int i = 0; i<segments.size(); ++i){
-		cout << segments[i] << endl;
+		//cout << segments[i] << endl;
 	}
 	
-	cout << endl;
+	//cout << endl;
 
 	//separate segments by k[i]
 	for(int x = 0; x < keySize; ++x){
 		string symbol = "";
-		for(int y = 0; y < segments.size()-1; ++y){
-			symbol += segments[y][x];
+		for(int y = 0; y < segments.size(); ++y){
+			if(x < segments[y].length()){
+				symbol += segments[y][x];
+			}
 		}
 		symbols.push_back(symbol);
 	}
 
 	for(int j = 0; j<symbols.size(); ++j){
-		cout << symbols[j] << endl;
+		//cout << symbols[j] << endl;
 	}
 
 	//find char of highest frequency
@@ -314,7 +391,7 @@ vector<int> keyBreak(string file, int keySize){
 		highFreqSymbols.push_back(maxChars);
 	}
 
-	cout << "Candidates: " << highFreqSymbols.size() << endl;
+	//cout << "Candidates: " << highFreqSymbols.size() << endl;
 	for(int z = 0; z< highFreqSymbols.size(); ++z){
 		for(int c = 0; c<highFreqSymbols[z].size(); ++c){
 			cout << highFreqSymbols[z][c];
@@ -331,28 +408,155 @@ vector<int> keyBreak(string file, int keySize){
 	for(int k = 0; k < highFreqSymbols.size(); k++){
 		int keyBit = (((shifts[highFreqSymbols[k][0]] - shifts[shift]) % 27) + 27) % 27;
 
+		/////////////////////////////
+		vector <int> bitCandidates;
+		for(int c = 0; c < candidateShifts.size(); ++c){
+			int keyCandidate;
+			if((shifts[highFreqSymbols[k][0]] - candidateShifts[c]) >= 0){
+				keyCandidate = (shifts[highFreqSymbols[k][0]] - candidateShifts[c]);
+			}
+			else{
+				keyCandidate = ((shifts[highFreqSymbols[k][0]] - candidateShifts[c]) + 27) % 28;
+			}			
+			//int keyCandidate =  ((shifts[highFreqSymbols[k][0]] - candidateShifts[c]) + 27) % 28;
+			bitCandidates.push_back(keyCandidate); 
+		}
+
+		keyCandidates.push_back(bitCandidates);
 		//cout << keyBit << endl;
 		key.push_back(keyBit);
 	}
 
+	/*
 	cout << "Key: ";
 	for(int y = 0;y<key.size(); ++y){
 		cout << key[y] << " ";
 	}
 	cout << endl;
+	*/
 
-	return(key);
+	for(int ee = 0; ee < keyCandidates.size(); ++ee){
+		for(int pp = 0; pp < keyCandidates[ee].size(); ++pp){
+			cout << keyCandidates[ee][pp] << " ";
+		}
+		cout << endl;
+	}
+
+	//returns 6^T permutations all of size T
+	vector< vector<int> > keyPermutations;
+	vector<int> row;
+	combinations(keyCandidates, 0, row);
+	keyPermutations = comb;
+
+	/*
+	cout << keyPermutations.size() << endl;
+	bool keyFound;
+	for(int ii = 0; ii<keyPermutations.size(); ++ii){
+		vector<int> attemptkey;
+		keyFound = true;
+		for(int jj = 0; jj<keyPermutations[ii].size(); ++jj){
+			attemptkey.push_back(keyPermutations[ii][jj]);
+			if(testKey[jj] != keyPermutations[ii][jj]){
+				keyFound = false; 
+				break;
+			}
+		}
+		if(keyFound){
+			cout << "Index - " << ii << endl;
+			for(int oo = 0; oo < attemptkey.size(); ++oo){
+				cout << attemptkey[oo] << " ";
+			}
+			cout << endl;
+			break;
+		}
+	}
+
+	if(keyFound){
+		cout << "KEY FOUND!!!" << endl;
+	}
+	else{
+		cout << "Failed to find key" << endl;
+	}*/
+
+	return(keyPermutations);
 
 }
 
-void decrypt(string file, int keySize){
-	vector<int> key = keyBreak(file, keySize);
-
-	int keyIterator = 0;
-
-	cout << "testing" << endl;
+string decrypt(string file, int keySize, string dictionary){
+	initializeShifts();
+	vector< vector<int> > possibleKeys = keyBreak(file, keySize);
+	vector<int> key = {26, 2, 10};
 
 	
+	string text = "";
+
+	/*cout << "The correct key - ";
+	for(int yy = 0; yy < possibleKeys[181].size(); ++yy){
+		cout << possibleKeys[181][yy] << " ";
+	}
+	cout << endl;*/
+	
+	bool keyFound;
+	for(int ii = 0; ii<possibleKeys.size(); ++ii){
+		string ptext = "";
+		vector<int> attemptkey;
+		keyFound = true;
+
+
+
+		int keyIterator = 0;
+		char ch;
+		fstream fin(file, fstream::in);
+		while (fin >> noskipws >> ch) {
+			char messageBit;
+			if(shifts[ch]-possibleKeys[ii][keyIterator] > 0){
+				/*
+				if(ii == 181 && keyIterator == 0){
+					cout << "My Key: " << possibleKeys[ii][0] << " " << possibleKeys[ii][1] << " " << possibleKeys[ii][2] << endl;
+					cout << shiftsToChars[(shifts[ch]-possibleKeys[ii][keyIterator])] << endl;
+				}*/
+				messageBit = shiftsToChars[(shifts[ch]-possibleKeys[ii][keyIterator])];
+			}
+			else{
+				/*
+				if(ii == 181 && keyIterator == 0){
+					cout << shiftsToChars[((shifts[ch]-possibleKeys[ii][keyIterator])+27)%28] << endl;
+				}*/
+				messageBit = shiftsToChars[((shifts[ch]-possibleKeys[ii][keyIterator])+27)%28];
+			}
+		
+			ptext += messageBit;
+			if(keyIterator >= keySize-1){
+				keyIterator = 0;
+			}
+			else{
+				keyIterator += 1;
+			}	
+		}
+
+		if(validateDecrytedText(ptext, dictionary) == false){
+			keyFound = false; 
+		}
+		else{
+			attemptkey = possibleKeys[ii];
+		}
+
+		
+		if(keyFound){
+			text = ptext;
+			cout << "KEY FOUND" << endl;
+			for(int oo = 0; oo < attemptkey.size(); ++oo){
+				cout << attemptkey[oo] << " ";
+			}
+			cout << endl;
+			break;
+		}
+	}
+
+	if(!keyFound){
+		cout << "KEY NOT FOUND" << endl;
+	}
+	/*
 	char ch;
 	fstream fin(file, fstream::in);
 	while (fin >> noskipws >> ch) {
@@ -365,170 +569,27 @@ void decrypt(string file, int keySize){
 		}
 		
 		cout << messageBit;
+		text += messageBit;
 		if(keyIterator >= keySize-1){
 			keyIterator = 0;
 		}
 		else{
 			keyIterator += 1;
 		}
-	}
+	}*/
 	
-
+	return(text);
 }
 
-	vector<int> cipherKeyBreak(string ctext, int keySize, string dictionary){
-		//break my ciphertext into segments
-		vector<string> segments;
-		vector<string> symbols;
-		vector< vector<char> > highFreqSymbols;
-		string segment = "";
+vector<string> decryptAllTs(string file, string dictionary){
+	vector<string> allPlainTexts;
 
-
-		/*
-		char ch;
-		fstream fin(file, fstream::in);
-		while (fin >> noskipws >> ch){
-			segment += ch;
-			if(segment.length() >= keySize){
-				segments.push_back(segment);
-				segment = "";
-			}
-		}*/
-
-		for(int iter = 0; iter < ctext.length(); ++iter){
-			segment += ctext[iter];
-			if(segment.length() >= keySize){
-				segments.push_back(segment);
-				segment = "";
-			}		
-		}
-		cout << "testing" << endl;
-		cout << ctext << endl;
-		cout << segments.size() << endl;
-		for(int i = 0; i<segments.size(); ++i){
-			cout << segments[i] << endl;
-		}
-		
-		cout << endl;
-
-		//separate segments by k[i]
-		for(int x = 0; x < keySize; ++x){
-			string symbol = "";
-			for(int y = 0; y < segments.size()-1; ++y){
-				symbol += segments[y][x];
-			}
-			symbols.push_back(symbol);
-		}
-
-		for(int j = 0; j<symbols.size(); ++j){
-			cout << symbols[j] << endl;
-		}
-
-		//find char of highest frequency
-		for(int p = 0; p<symbols.size(); ++p){
-			int max = 0;
-			vector<char> maxChars;
-			map<char, int> chars;
-
-			for(int t = 0; t<symbols[p].length(); ++t){
-				if(chars.count(symbols[p][t])){
-					chars[symbols[p][t]] = chars[symbols[p][t]] + 1;
-				}
-				else{
-				chars[symbols[p][t]] = 1;
-				}
-
-				if(chars[symbols[p][t]] == max){
-					maxChars.push_back(symbols[p][t]);
-				}
-
-				if(chars[symbols[p][t]] > max){
-					max = chars[symbols[p][t]];
-					maxChars.clear();
-					maxChars.push_back(symbols[p][t]);
-				}
-			}
-
-			highFreqSymbols.push_back(maxChars);
-		}
-
-		cout << "Candidates: " << highFreqSymbols.size() << endl;
-		for(int z = 0; z< highFreqSymbols.size(); ++z){
-			for(int c = 0; c<highFreqSymbols[z].size(); ++c){
-				cout << highFreqSymbols[z][c];
-			}
-			cout << ", ";
-		}
-		cout << endl;
-
-		//shift back by highest frequency character from the plainttext dictionary
-		vector<int> key;
-		initializeShifts();
-
-		char shift = findMaxChar(dictionary).first;
-		for(int k = 0; k < highFreqSymbols.size(); k++){
-			int keyBit = (((shifts[highFreqSymbols[k][0]] - shifts[shift]) % 27) + 27) % 27;
-
-			//cout << keyBit << endl;
-			key.push_back(keyBit);
-		}
-
-		cout << "Key: ";
-		for(int y = 0;y<key.size(); ++y){
-			cout << key[y] << " ";
-		}
-		cout << endl;
-
-		return(key);
-
+	for(int i = 0; i < 25; ++i){
+		string ptext = decrypt(file, i, dictionary);
+		allPlainTexts.push_back(ptext);
 	}
 
-	void cipherDecrypt(string ctext, int keySize, string dictionary){
-		vector<int> key = cipherKeyBreak(ctext, keySize, dictionary);
-
-		int keyIterator = 0;
-
-		
-		for(int i = 0; i < ctext.length(); ++i){
-			char messageBit;
-			char ch = ctext[i];
-			if(shifts[ch]-key[keyIterator] > 0){
-				messageBit = shiftsToChars[(shifts[ch]-key[keyIterator])];
-			}
-			else{
-				messageBit = shiftsToChars[((shifts[ch]-key[keyIterator])+27)%28];
-			}
-			
-			cout << messageBit;
-			if(keyIterator >= keySize-1){
-				keyIterator = 0;
-			}
-			else{
-				keyIterator += 1;
-			}		
-		}
-		/*	
-		char ch;
-		fstream fin(file, fstream::in);
-		while (fin >> noskipws >> ch) {
-			char messageBit;
-			if(shifts[ch]-key[keyIterator] > 0){
-				messageBit = shiftsToChars[(shifts[ch]-key[keyIterator])];
-			}
-			else{
-				messageBit = shiftsToChars[((shifts[ch]-key[keyIterator])+27)%28];
-			}
-			
-			cout << messageBit;
-			if(keyIterator >= keySize-1){
-				keyIterator = 0;
-			}
-			else{
-				keyIterator += 1;
-			}
-		}*/
-		
-
-	}
+	return(allPlainTexts);
+}
 
 };
