@@ -33,10 +33,10 @@
     <ClInclude Include="Decryptor.h">
       <Filter>Header Files</Filter>
     </ClInclude>
-    <ClInclude Include="PolyShiftDecryptor.h">
+    <ClInclude Include="Encrypt.h">
       <Filter>Header Files</Filter>
     </ClInclude>
-    <ClInclude Include="Encrypt.h">
+    <ClInclude Include="MultiShiftDecryptor.h">
       <Filter>Header Files</Filter>
     </ClInclude>
   </ItemGroup>

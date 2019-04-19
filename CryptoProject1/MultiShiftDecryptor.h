@@ -1,7 +1,7 @@
 #pragma once
 
-#ifndef POLYSHIFTDECRYPTOR_H_
-#define POLYSHIFTDECRYPTOR_H_
+#ifndef MULTISHIFTDECRYPTOR_H_
+#define MULTISHIFTDECRYPTOR_H_
 
 #include <vector>
 #include <string>
@@ -19,7 +19,7 @@
 #include "Decryptor.h"
 #endif
 
-/* POLYSHIFTDECRYPTOR */
+/* MULTISHIFTDECRYPTOR */
 
 /*
  Use the polyalphabetic cipher decryption strategy and build on it. Requires an additional 

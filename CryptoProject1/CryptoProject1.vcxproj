@@ -151,7 +151,7 @@
     <ClInclude Include="Dictionary.h" />
     <ClInclude Include="Encrypt.h" />
     <ClInclude Include="LetterDistribution.h" />
-    <ClInclude Include="PolyShiftDecryptor.h" />
+    <ClInclude Include="MultiShiftDecryptor.h" />
     <ClInclude Include="stdafx.h" />
     <ClInclude Include="targetver.h" />
     <ClInclude Include="Text.h" />

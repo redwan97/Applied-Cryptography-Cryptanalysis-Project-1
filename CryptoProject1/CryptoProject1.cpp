@@ -4,7 +4,7 @@
 #include "stdafx.h"
 #include "Dictionary.h"
 #include "LetterDistribution.h"
-#include "PolyShiftDecryptor.h"
+#include "MultiShiftDecryptor.h"
 #include "Text.h"
 #include "Encrypt.h"
 #include "SymbolDecryptor.h"
