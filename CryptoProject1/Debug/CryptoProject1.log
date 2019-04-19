@@ -2,5 +2,26 @@
 c:\users\heart\desktop\nyu documents\nyucshw\appliedcrypto\cryptoproject1\cryptoproject1\polyshiftdecryptor.h(118): warning C4244: 'initializing': conversion from 'double' to 'int', possible loss of data
 c:\users\heart\desktop\nyu documents\nyucshw\appliedcrypto\cryptoproject1\cryptoproject1\encrypt.h(27): warning C4018: '<': signed/unsigned mismatch
 c:\users\heart\desktop\nyu documents\nyucshw\appliedcrypto\cryptoproject1\cryptoproject1\encrypt.h(41): warning C4018: '<': signed/unsigned mismatch
-c:\users\heart\desktop\nyu documents\nyucshw\appliedcrypto\cryptoproject1\cryptoproject1\cryptoproject1.cpp(40): warning C4018: '<': signed/unsigned mismatch
+c:\users\heart\desktop\nyu documents\nyucshw\appliedcrypto\cryptoproject1\cryptoproject1\symboldecryptor.h(29): warning C4018: '<': signed/unsigned mismatch
+c:\users\heart\desktop\nyu documents\nyucshw\appliedcrypto\cryptoproject1\cryptoproject1\symboldecryptor.h(51): warning C4018: '<': signed/unsigned mismatch
+c:\users\heart\desktop\nyu documents\nyucshw\appliedcrypto\cryptoproject1\cryptoproject1\symboldecryptor.h(271): warning C4018: '<': signed/unsigned mismatch
+c:\users\heart\desktop\nyu documents\nyucshw\appliedcrypto\cryptoproject1\cryptoproject1\symboldecryptor.h(272): warning C4018: '<': signed/unsigned mismatch
+c:\users\heart\desktop\nyu documents\nyucshw\appliedcrypto\cryptoproject1\cryptoproject1\symboldecryptor.h(349): warning C4018: '>=': signed/unsigned mismatch
+c:\users\heart\desktop\nyu documents\nyucshw\appliedcrypto\cryptoproject1\cryptoproject1\symboldecryptor.h(360): warning C4018: '<': signed/unsigned mismatch
+c:\users\heart\desktop\nyu documents\nyucshw\appliedcrypto\cryptoproject1\cryptoproject1\symboldecryptor.h(369): warning C4018: '<': signed/unsigned mismatch
+c:\users\heart\desktop\nyu documents\nyucshw\appliedcrypto\cryptoproject1\cryptoproject1\symboldecryptor.h(370): warning C4018: '<': signed/unsigned mismatch
+c:\users\heart\desktop\nyu documents\nyucshw\appliedcrypto\cryptoproject1\cryptoproject1\symboldecryptor.h(377): warning C4018: '<': signed/unsigned mismatch
+c:\users\heart\desktop\nyu documents\nyucshw\appliedcrypto\cryptoproject1\cryptoproject1\symboldecryptor.h(382): warning C4018: '<': signed/unsigned mismatch
+c:\users\heart\desktop\nyu documents\nyucshw\appliedcrypto\cryptoproject1\cryptoproject1\symboldecryptor.h(387): warning C4018: '<': signed/unsigned mismatch
+c:\users\heart\desktop\nyu documents\nyucshw\appliedcrypto\cryptoproject1\cryptoproject1\symboldecryptor.h(410): warning C4018: '<': signed/unsigned mismatch
+c:\users\heart\desktop\nyu documents\nyucshw\appliedcrypto\cryptoproject1\cryptoproject1\symboldecryptor.h(411): warning C4018: '<': signed/unsigned mismatch
+c:\users\heart\desktop\nyu documents\nyucshw\appliedcrypto\cryptoproject1\cryptoproject1\symboldecryptor.h(423): warning C4018: '<': signed/unsigned mismatch
+c:\users\heart\desktop\nyu documents\nyucshw\appliedcrypto\cryptoproject1\cryptoproject1\symboldecryptor.h(428): warning C4018: '<': signed/unsigned mismatch
+c:\users\heart\desktop\nyu documents\nyucshw\appliedcrypto\cryptoproject1\cryptoproject1\symboldecryptor.h(447): warning C4018: '<': signed/unsigned mismatch
+c:\users\heart\desktop\nyu documents\nyucshw\appliedcrypto\cryptoproject1\cryptoproject1\symboldecryptor.h(454): warning C4018: '<': signed/unsigned mismatch
+c:\users\heart\desktop\nyu documents\nyucshw\appliedcrypto\cryptoproject1\cryptoproject1\symboldecryptor.h(455): warning C4018: '<': signed/unsigned mismatch
+c:\users\heart\desktop\nyu documents\nyucshw\appliedcrypto\cryptoproject1\cryptoproject1\symboldecryptor.h(555): warning C4018: '<': signed/unsigned mismatch
+c:\users\heart\desktop\nyu documents\nyucshw\appliedcrypto\cryptoproject1\cryptoproject1\symboldecryptor.h(603): warning C4018: '<': signed/unsigned mismatch
+c:\users\heart\desktop\nyu documents\nyucshw\appliedcrypto\cryptoproject1\cryptoproject1\cryptoproject1.cpp(75): warning C4018: '<': signed/unsigned mismatch
+c:\users\heart\desktop\nyu documents\nyucshw\appliedcrypto\cryptoproject1\cryptoproject1\cryptoproject1.cpp(77): warning C4018: '<': signed/unsigned mismatch
   CryptoProject1.vcxproj -> C:\Users\heart\Desktop\NYU Documents\NYUcshw\AppliedCrypto\CryptoProject1\Debug\CryptoProject1.exe
