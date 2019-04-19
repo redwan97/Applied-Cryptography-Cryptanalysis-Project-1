@@ -124,12 +124,12 @@ int main()
 		std::cout << "Conducting Test 2..." << std::endl;
 		std::cout << "Please enter the txt file containing the ciphertext to be decrypted : ";
 		std::cin >> ctext1;
-		std::cout << "Please enter key length : ";
+
+		//std::cout << "Please enter key length : ";
 		//std::cin >> keySize;
 		//std::getline(std::cin, ctext);
 		SymbolDecryptor* symbolDec = new SymbolDecryptor();
 		symbolDec->decryptFile(ctext1, "plaintext_dictionary_2.txt");
-
 	}
 	else {
 		std::cout << "Invalid Input. Exiting !!" << std::endl;
