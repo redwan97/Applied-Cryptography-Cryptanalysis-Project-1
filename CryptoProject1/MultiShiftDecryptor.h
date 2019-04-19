@@ -68,9 +68,9 @@ public:
 	const std::string getExplanation(bool displayPlaintext = false) const {
 		std::string explanation;
 		std::ostringstream os(explanation);
-		if(!displayPlaintext) { std::cout << "\nFor the determined plaintext,"; }
-		else { std::cout << "\nFor plaintext = \n'" << plainText << "'"; }
-		std::cout << "\nAnd ciphertext = '" << cipherText << "'\n\nThe following has been deduced:" << std::endl;
+		if(!displayPlaintext) { std::cout << "For given "; }
+		else { std::cout << "\nFor plaintext = \n'" << plainText << "'\nAnd "; }
+		std::cout << "ciphertext = '" << cipherText << "'\nThe following has been deduced:" << std::endl;
 		if (getKeyShifts().empty()) {																																// if we don't have key shifts, we were not successful
 			std::cout << "The cipher text to plain text at index " << getDictionaryIndex() << " was not a match using key length " << getKeyLength() << std::endl;
 		}

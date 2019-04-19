@@ -15,13 +15,9 @@
 #include <iostream>
 
 
+
 int main()
 {	
-	/*Testing using encryption function*/
-	//std::string p = loadDefaultDictionary()[3];
-	//p = encrypt(p);
-	//p = encrypt2(p);
-
 	vector<string> ciphers;
 	std::string option;
 	std::string ynOption;
@@ -36,7 +32,7 @@ int main()
 	if (option == "Test 1" || option == "1" || option == "test 1" || option == "test1" || option == "Test1" || option == "one" || option == "t1") {
 		std::cout << "For the purpose of the project, program assumes ciphertext originates from some plaintext in provided dictionary." << std::endl;
 		std::cout << "Note this program can find plaintext-ciphertext pairs and only dictionary 1 has been provided to this program.\n" << std::endl;
-		std::cout << "Are you typing in ciphertexts? Indicate yes or no. If no, preset ciphertexts will be used: ";
+		std::cout << "Input ciphertexts manually? Indicate yes or no.\nIf no, preset ciphertexts will be used.\nIf neither yes nor no, indicate filename: ";
 		std::cin >> ynOption;
 		if (ynOption == "Y" || ynOption == "Yes" || ynOption == "y" || ynOption == "yes") {
 			std::cout << "Please enter the ciphertext to be decrypted : " << std::endl;
@@ -67,8 +63,16 @@ int main()
 			ciphers.push_back(ctext9);
 		}
 		else {
-			std::cout << "Invalid Input. Exiting !!" << std::endl;
-			return 0;
+			ifstream ifs(ynOption);
+			if (!ifs) {
+				cerr << "Could not open the file.\n";
+				exit(1);
+			}
+			string line;
+			while (getline(ifs, line)) {
+				ciphers.push_back(line);
+			}
+			
 		}
 		std::cout << std::endl;
 		
@@ -78,11 +82,11 @@ int main()
 				for (int j = 0; j < 28; j++) {
 					Decryptor* dec = new MultiShiftDecryptor(i, dict[i], ciphers[x], j + 1);
 					if (dec->decrypt()) {
+						std::cout << "Decrypting Challenge cipher #" << x + 1 << " ... " << std::endl;
+						std::cout << "Program's guess of plaintext is = '" << dict[i] << "'"<< std::endl;
 						dec->getExplanation();
-						std::cout << "Program's guess of plaintext is: " << dict[i] << std::endl;
 						cracked = true;
 						delete dec;
-						std::cout << std::endl << std::endl;
 						break;
 					}
 					delete dec;
@@ -90,52 +94,59 @@ int main()
 			}
 			if (!cracked) { std::cout << "Could not decode ciphertext. Please have mercy :( " << std::endl; }
 		}
-		/*Testing on simple plaintexts*/
-		/*
-		std::string s, c;
-		s = "hi how are you dude";
-		c = encrypt(s);
-		bool cracked = false;
-		for (int i = 0; i < 40; i++) {
-			Decryptor* d =  new MultiShiftDecryptor(0, s, c, i+1);
-			if (d->decrypt()) {
-				d->getExplanation();
-				cracked = true;
-				delete d;
-				break;
-			}
-			delete d;
-		}
-		if (!cracked) { std::cout << "Could not decode ciphertext. Please have mercy :( " << std::endl; }
-		*/
-
-		/*Testing header file correctness*/
-		/*
-		for (auto x : loadDefaultDictionary()) {					// for each element in dictionary that is returned by loadDefaultDict,
-			Text aText(x);											//	create a Text for it
-			aText.getDistribution().printFreqTable();				//	print the distribution form the text
-			std::cout << std::endl;
-		}
-		*/
 	}
 	else if (option == "Test 2" || option == "2" || option == "test 2" || option == "test2" || option == "Test2" || option == "two" || option == "t2") {
 		//int keySize;
-
 		std::cout << "Conducting Test 2..." << std::endl;
 		std::cout << "Please enter the txt file containing the ciphertext to be decrypted : ";
 		std::cin >> ctext1;
+		//ctext1 = "jbinixigjimzuzgjiqzlchauipzlvlxbzyugvmniyihmulzcgjimzyuxvmocmnlsuxvnxbzlugcmzlvwcfcvugvmmzoluxvnxbzluzgjiqzlchaupixvfcnsuchnocncpzhzmmuxvlhvfcnczmujlinloyzyuvlgfznmujlinloyzyuhcwfcxemuzgjiqzlchaucggohimojjlzmmvhnuxihyzghvnilsu iin vffmulzcgjimzyuxigwomnchauchnocncpzhzmmuvyyoxzlmumnojzhyiomugcmzlvwcfcvuipzlvlxbzyugcmzlvwcfcvuipzlvlxbzyumqvazugcmzlvwcfcvuixnsfmuwvhhzyuxigwomnchauxvlhvfcnczmuipzlvlxbzyucggohimojjlzmmvhnuwolmvlsuvmnihcmbzyu vofnfzmmfsuvlgfznmucggohimojjlzmmvhnubzzffzmmugcmjlihohxcvn";
+
 
 		//std::cout << "Please enter key length : ";
 		//std::cin >> keySize;
 		//std::getline(std::cin, ctext);
 		SymbolDecryptor* symbolDec = new SymbolDecryptor();
 		symbolDec->decryptFile(ctext1, "plaintext_dictionary_2.txt");
+		
 	}
-	else {
-		std::cout << "Invalid Input. Exiting !!" << std::endl;
-	}
+	else { std::cout << "Invalid Input. Exiting !!" << std::endl; }
 
 
     return 0;
 }
 
+
+
+/*Testing using encryption function*/
+//std::string p = loadDefaultDictionary()[3];
+//p = encrypt(p);
+//p = encrypt2(p);
+
+/*Testing on simple plaintexts*/
+/*
+std::string s, c;
+s = "hi how are you dude";
+c = encrypt(s);
+bool cracked = false;
+for (int i = 0; i < 40; i++) {
+Decryptor* d =  new MultiShiftDecryptor(0, s, c, i+1);
+if (d->decrypt()) {
+d->getExplanation();
+cracked = true;
+delete d;
+break;
+}
+delete d;
+}
+if (!cracked) { std::cout << "Could not decode ciphertext. Please have mercy :( " << std::endl; }
+*/
+
+/*Testing header file correctness*/
+/*
+for (auto x : loadDefaultDictionary()) {					// for each element in dictionary that is returned by loadDefaultDict,
+Text aText(x);											//	create a Text for it
+aText.getDistribution().printFreqTable();				//	print the distribution form the text
+std::cout << std::endl;
+}
+*/

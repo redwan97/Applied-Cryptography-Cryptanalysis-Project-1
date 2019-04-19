@@ -39,6 +39,9 @@
     <ClInclude Include="MultiShiftDecryptor.h">
       <Filter>Header Files</Filter>
     </ClInclude>
+    <ClInclude Include="SymbolDecryptor.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="stdafx.cpp">
