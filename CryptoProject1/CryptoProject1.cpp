@@ -119,16 +119,16 @@ int main()
 		*/
 	}
 	else if (option == "Test 2" || option == "2" || option == "test 2" || option == "test2" || option == "Test2" || option == "two" || option == "t2") {
-		int keySize;
+		//int keySize;
 
 		std::cout << "Conducting Test 2..." << std::endl;
 		std::cout << "Please enter the txt file containing the ciphertext to be decrypted : ";
 		std::cin >> ctext1;
 		std::cout << "Please enter key length : ";
-		std::cin >> keySize;
+		//std::cin >> keySize;
 		//std::getline(std::cin, ctext);
 		SymbolDecryptor* symbolDec = new SymbolDecryptor();
-		symbolDec->decrypt(ctext1, keySize, "plaintext_dictionary_2.txt");
+		symbolDec->decryptFile(ctext1, "plaintext_dictionary_2.txt");
 
 	}
 	else {

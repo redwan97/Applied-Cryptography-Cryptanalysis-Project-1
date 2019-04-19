@@ -1,3 +1,4 @@
+#include <stdio.h>
 #include <iostream>
 #include <vector>
 #include <fstream>
@@ -133,6 +134,18 @@ void initializeShifts(){
 	shiftsToChars[25] = 'y';
 	shiftsToChars[26] = 'z';
 	shiftsToChars[27] = ' ';
+}
+
+vector<int> populate(){
+	vector<int> result;
+	result.push_back(19);
+	result.push_back(5);
+	result.push_back(9);
+	result.push_back(15);
+	result.push_back(18);
+	result.push_back(0);
+
+	return result;
 }
 
 
@@ -329,7 +342,7 @@ void findKeyLength(string file){
 
 
 
-
+//where the magic happens
 vector <vector<int> > keyBreak(string file, int keySize){
 	//break my ciphertext into segments
 	vector<string> segments;
@@ -337,9 +350,12 @@ vector <vector<int> > keyBreak(string file, int keySize){
 	vector< vector<char> > highFreqSymbols;
 	string segment = "";
 
-	vector< vector <int> > keyCandidates; 
-	vector<int> candidateShifts = {19, 5, 9, 15, 18, 0};
-	vector<int> testKey = {26, 2, 10};
+	vector< vector <int> > keyCandidates;
+	//based on highest frequency characters within dicitonary 
+	//{19, 5, 9, 15, 18, 0}
+	vector<int> candidateShifts = populate();
+
+	//vector<int> testKey = {26, 2, 10};
 
 	char ch;
 	fstream fin(file, fstream::in);
@@ -357,10 +373,10 @@ vector <vector<int> > keyBreak(string file, int keySize){
 		segment = "";
 	}
 
-	
+	/*cout << "Segments: " << segments.size() << endl;
 	for(int i = 0; i<segments.size(); ++i){
-		//cout << segments[i] << endl;
-	}
+		cout << segments[i] << endl;
+	}*/
 	
 	//cout << endl;
 
@@ -540,8 +556,10 @@ string decrypt(string file, int keySize, string dictionary){
 	initializeShifts();
 	mapDictionary();
 
+
+	//creates 2D vector of all possible keys (each possible key is its own vector)
 	vector< vector<int> > possibleKeys = keyBreak(file, keySize);
-	vector<int> key = {26, 2, 10};
+	//vector<int> key = {26, 2, 10};
 
 	
 	string text = "";
@@ -552,16 +570,16 @@ string decrypt(string file, int keySize, string dictionary){
 	}
 	cout << endl;*/
 	
-
+	//starts timer that will timeout if finding the correct key takes too long
 	time_t timeStart;
 	timeStart = time(NULL);
 	bool keyFound;
 	for(int ii = 0; ii<possibleKeys.size(); ++ii){
 
-		if(timeStart > 55){
+		/*if(timeStart > 55){
 			cout << "TIMEOUT" << endl;
 			break;
-		}
+		}*/
 
 		string ptext = "";
 		vector<int> attemptkey;
@@ -615,13 +633,16 @@ string decrypt(string file, int keySize, string dictionary){
 				cout << attemptkey[oo] << " ";
 			}
 			cout << endl;
+			cout << text << endl << endl;
+			fin.close();
 			break;
 		}
+		fin.close();
 	}
 
 	if(!keyFound){
 		cout << "KEY NOT FOUND" << endl << endl;
-		decryptTest(file, defaultKey, keySize);
+		//decryptTest(file, defaultKey, keySize);
 	}
 	/*
 	char ch;
@@ -645,24 +666,69 @@ string decrypt(string file, int keySize, string dictionary){
 		}
 	}*/
 	
+	
 	return(text);
 }
+
 
 vector<string> decryptAllTs(string file, string dictionary){
 	vector<string> allPlainTexts;
 	string text;
 
-	for(int i = 0; i < 25; ++i){
+	for(int i = 5; i < 7; ++i){
 		cout << "Checking T Size: " << i << endl;
 		string ptext = decrypt(file, i, dictionary);
 		if(decryptionSuccess){
+			cout << "Success" << endl;
 			text = ptext;
+			decryptionSuccess = false;
 			break;
 		}
 		//allPlainTexts.push_back(ptext);
 	}
 
 	return(allPlainTexts);
+}
+
+//creates files to hold all individual cipher texts. Not too pretty but good in terms of modularity 
+vector<string> createCipherFiles(string file){
+	vector<string> cipherFiles;
+	int inc = 1;
+	string line;
+
+	fstream fin(file, fstream::in);
+	while(getline(fin, line)){
+		string fileName = "cipherText_" + to_string(inc) + ".txt";
+
+		fstream infile;
+		infile.open(fileName, fstream::out);
+		infile << line;
+		infile.close();
+
+		cipherFiles.push_back(fileName);
+		inc += 1;
+	}
+
+	return cipherFiles;
+}
+
+void decryptFile(string file, string dictionary){
+
+	//every line is it's own cipher text
+	vector<string> lines = createCipherFiles(file);
+
+	for(int iterator = 0; iterator < lines.size(); ++iterator){
+		cout << "Line " + to_string(iterator + 1) + " - " << endl; 
+		decryptAllTs(lines[iterator], dictionary);
+		cout << endl;
+	}
+
+	for(int removeIterator = 0; removeIterator < lines.size(); ++removeIterator){
+		string fileName = lines[removeIterator];
+		char char_array[fileName.length() + 1]; 
+		strcpy(char_array, fileName.c_str());
+		std::remove(char_array);
+	}
 }
 
 
