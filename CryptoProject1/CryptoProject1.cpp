@@ -120,6 +120,7 @@ int main()
 	}
 	else if (option == "Test 2" || option == "2" || option == "test 2" || option == "test2" || option == "Test2" || option == "two" || option == "t2") {
 		int keySize;
+
 		std::cout << "Conducting Test 2..." << std::endl;
 		std::cout << "Please enter the txt file containing the ciphertext to be decrypted : ";
 		std::cin >> ctext1;

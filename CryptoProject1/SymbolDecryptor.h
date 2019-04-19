@@ -11,6 +11,7 @@ class SymbolDecryptor {
 		vector< vector<int> >comb;
 		vector<int> defaultKey;
 		map<string, int> plaintextDictionary;
+		bool decryptionSuccess = false;
 
 	public:
 
@@ -538,7 +539,7 @@ string decryptTest(string file, vector<int> key, int keySize){
 string decrypt(string file, int keySize, string dictionary){
 	initializeShifts();
 	mapDictionary();
-	
+
 	vector< vector<int> > possibleKeys = keyBreak(file, keySize);
 	vector<int> key = {26, 2, 10};
 
@@ -551,13 +552,22 @@ string decrypt(string file, int keySize, string dictionary){
 	}
 	cout << endl;*/
 	
+
+	time_t timeStart;
+	timeStart = time(NULL);
 	bool keyFound;
 	for(int ii = 0; ii<possibleKeys.size(); ++ii){
+
+		if(timeStart > 55){
+			cout << "TIMEOUT" << endl;
+			break;
+		}
+
 		string ptext = "";
 		vector<int> attemptkey;
 		keyFound = true;
 
-
+		
 
 		int keyIterator = 0;
 		char ch;
@@ -600,6 +610,7 @@ string decrypt(string file, int keySize, string dictionary){
 		if(keyFound){
 			text = ptext;
 			cout << "KEY FOUND" << endl;
+			decryptionSuccess = true;
 			for(int oo = 0; oo < attemptkey.size(); ++oo){
 				cout << attemptkey[oo] << " ";
 			}
@@ -639,14 +650,21 @@ string decrypt(string file, int keySize, string dictionary){
 
 vector<string> decryptAllTs(string file, string dictionary){
 	vector<string> allPlainTexts;
+	string text;
 
 	for(int i = 0; i < 25; ++i){
+		cout << "Checking T Size: " << i << endl;
 		string ptext = decrypt(file, i, dictionary);
-		allPlainTexts.push_back(ptext);
+		if(decryptionSuccess){
+			text = ptext;
+			break;
+		}
+		//allPlainTexts.push_back(ptext);
 	}
 
 	return(allPlainTexts);
 }
+
 
 
 };
